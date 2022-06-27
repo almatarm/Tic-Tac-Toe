@@ -8,9 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    let columns: [GridItem] = [ GridItem(.flexible()),
+                                GridItem(.flexible()),
+                                GridItem(.flexible())]
+    
     var body: some View {
-        Text("Hello, world!")
+        GeometryReader { geometry in
+            VStack {
+                Spacer()
+                
+                LazyVGrid(columns: columns, spacing: 10, content: {
+                    ForEach(0..<9) { i in
+                        ZStack {
+                            Rectangle()
+                                .foregroundColor(.red)
+                                .opacity(0.5)
+                                .cornerRadius(25)
+                                .frame(width: geometry.size.width/3 - 25,
+                                       height: geometry.size.width/3 - 25)
+                            
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .frame(width: 35, height: 35)
+                                .foregroundColor(.white)
+                        }
+                    }
+                })
+                
+                Spacer()
+            }
             .padding()
+        }
     }
 }
 
