@@ -74,10 +74,13 @@ struct TicTacToe {
     private var moves: [Move?] = Array(repeatElement(nil, count: 9))
     private var player: Player
     var isBoardDisbled: Bool
+    var winner: Player? = nil
+    var activeGame = false
     
     init(initPlayer: Player) {
         self.player = initPlayer
         self.isBoardDisbled = initPlayer == .computer
+        self.activeGame = true
     }
     
     func isSquareOccupied(forIndex index: Int) -> Bool {
@@ -85,19 +88,33 @@ struct TicTacToe {
     }
     
     mutating func humanMove(forIndex index: Int) -> Bool {
-        let success = setSquare(forIndex: index)
-        if success {
-            isBoardDisbled.toggle()
-        }
+        let success = activeGame && setSquare(forIndex: index)
+        if success { afterSuccssfullMove() }
         return success
     }
     
     mutating func computerMove() -> Bool {
-        let success = setSquare(forIndex: determineComputerNextMove())
-        if success {
-            isBoardDisbled.toggle()
-        }
+        let success = activeGame && setSquare(forIndex: determineComputerNextMove())
+        if success { afterSuccssfullMove() }
         return success
+    }
+    
+    private mutating func afterSuccssfullMove() {
+        winner = checkWinCondition() ? player : nil
+        if (winner != nil) {
+            activeGame = false
+            print("Winner is \(player)")
+            return
+        }
+        
+        if(checkForDraw()) {
+            activeGame = false
+            print("Draw")
+            return
+        }
+        
+        isBoardDisbled.toggle()
+        player = player == .human ? .computer : .human
     }
     
     mutating func setSquare(forIndex index: Int) -> Bool {
@@ -105,7 +122,6 @@ struct TicTacToe {
             return false
         }
         moves[index] = Move(player: player, boardIndex: index)
-        player = player == .human ? .computer : .human
         return true
     }
     
@@ -118,9 +134,7 @@ struct TicTacToe {
         if(emptySquaresIndecies.isEmpty) {
             return -1
         }
-        let i = emptySquaresIndecies.randomElement()!
-        print(i)
-        return i
+        return emptySquaresIndecies.randomElement()!
     }
     
     func findEmptySquares() -> [Int] {
@@ -133,5 +147,21 @@ struct TicTacToe {
         return indecies
     }
     
+    func checkWinCondition() -> Bool {
+        let winPatterns: Set<Set<Int>> = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+        
+        let playerMoveIndices = Set( moves.compactMap{ $0 }
+            .filter { $0.player ==  player }
+            .map { $0.boardIndex })
+        
+        for pattern in winPatterns where pattern.isSubset(of: playerMoveIndices) {
+            return true
+        }
+        
+        return false
+    }
     
+    func checkForDraw() -> Bool {
+        return moves.compactMap{ $0 }.count == 9
+    }
 }
