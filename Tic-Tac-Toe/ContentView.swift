@@ -35,11 +35,14 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                         }
                         .onTapGesture {
-                            board.setSquare(forIndex: i)
+                            board.humanMove(forIndex: i)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                board.computerMove()
+                            }
                         }
                     }
                 })
-                
+                .disabled(board.isBoardDisbled)
                 Spacer()
             }
             .padding()
@@ -70,13 +73,31 @@ struct Move {
 struct TicTacToe {
     private var moves: [Move?] = Array(repeatElement(nil, count: 9))
     private var player: Player
+    var isBoardDisbled: Bool
     
     init(initPlayer: Player) {
         self.player = initPlayer
+        self.isBoardDisbled = initPlayer == .computer
     }
     
     func isSquareOccupied(forIndex index: Int) -> Bool {
         return moves[index] != nil
+    }
+    
+    mutating func humanMove(forIndex index: Int) -> Bool {
+        let success = setSquare(forIndex: index)
+        if success {
+            isBoardDisbled.toggle()
+        }
+        return success
+    }
+    
+    mutating func computerMove() -> Bool {
+        let success = setSquare(forIndex: determineComputerNextMove())
+        if success {
+            isBoardDisbled.toggle()
+        }
+        return success
     }
     
     mutating func setSquare(forIndex index: Int) -> Bool {
@@ -91,5 +112,26 @@ struct TicTacToe {
     func indicator(forIndex index: Int) -> String {
         return moves[index]?.indicator ?? ""
     }
+    
+    func determineComputerNextMove() -> Int {
+        let emptySquaresIndecies = findEmptySquares()
+        if(emptySquaresIndecies.isEmpty) {
+            return -1
+        }
+        let i = emptySquaresIndecies.randomElement()!
+        print(i)
+        return i
+    }
+    
+    func findEmptySquares() -> [Int] {
+        var indecies: [Int]  = []
+        for (index, move) in moves.enumerated() {
+            if move == nil {
+                indecies.append(index)
+            }
+        }
+        return indecies
+    }
+    
     
 }
