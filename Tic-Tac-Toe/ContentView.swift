@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var board: TicTacToe = TicTacToe(initPlayer: .human)
+    @State private var alertItem: AlertItem?
     
     let columns: [GridItem] = [ GridItem(.flexible()),
                                 GridItem(.flexible()),
@@ -35,9 +36,10 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                         }
                         .onTapGesture {
-                            board.humanMove(forIndex: i)
+                            let succuessMove = board.humanMove(forIndex: i)
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                                 board.computerMove()
+                                alertItem = checkGameStatusAndUpdateAlert()
                             }
                         }
                     }
@@ -46,6 +48,22 @@ struct ContentView: View {
                 Spacer()
             }
             .padding()
+            .alert(item: $alertItem) { alertItem in
+                Alert(title: alertItem.title,
+                      message: alertItem.message,
+                      dismissButton: .default(alertItem.buttonTitle, action: {
+                        board.restGame()
+                      }))
+            }
+        }
+    }
+    
+    func checkGameStatusAndUpdateAlert() -> AlertItem? {
+        switch board.status {
+        case .humanWin: return AlertContext.humanWin
+        case .computerWin: return AlertContext.computerWin
+        case .draw: return AlertContext.draw
+        case .inProgress: return nil
         }
     }
     
@@ -54,114 +72,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-    }
-}
-
-enum Player {
-    case human, computer
-}
-
-struct Move {
-    let player: Player
-    let boardIndex: Int
-    
-    var indicator: String {
-        return player == .human ? "xmark" : "circle"
-    }
-}
-
-struct TicTacToe {
-    private var moves: [Move?] = Array(repeatElement(nil, count: 9))
-    private var player: Player
-    var isBoardDisbled: Bool
-    var winner: Player? = nil
-    var activeGame = false
-    
-    init(initPlayer: Player) {
-        self.player = initPlayer
-        self.isBoardDisbled = initPlayer == .computer
-        self.activeGame = true
-    }
-    
-    func isSquareOccupied(forIndex index: Int) -> Bool {
-        return moves[index] != nil
-    }
-    
-    mutating func humanMove(forIndex index: Int) -> Bool {
-        let success = activeGame && setSquare(forIndex: index)
-        if success { afterSuccssfullMove() }
-        return success
-    }
-    
-    mutating func computerMove() -> Bool {
-        let success = activeGame && setSquare(forIndex: determineComputerNextMove())
-        if success { afterSuccssfullMove() }
-        return success
-    }
-    
-    private mutating func afterSuccssfullMove() {
-        winner = checkWinCondition() ? player : nil
-        if (winner != nil) {
-            activeGame = false
-            print("Winner is \(player)")
-            return
-        }
-        
-        if(checkForDraw()) {
-            activeGame = false
-            print("Draw")
-            return
-        }
-        
-        isBoardDisbled.toggle()
-        player = player == .human ? .computer : .human
-    }
-    
-    mutating func setSquare(forIndex index: Int) -> Bool {
-        if isSquareOccupied(forIndex: index) {
-            return false
-        }
-        moves[index] = Move(player: player, boardIndex: index)
-        return true
-    }
-    
-    func indicator(forIndex index: Int) -> String {
-        return moves[index]?.indicator ?? ""
-    }
-    
-    func determineComputerNextMove() -> Int {
-        let emptySquaresIndecies = findEmptySquares()
-        if(emptySquaresIndecies.isEmpty) {
-            return -1
-        }
-        return emptySquaresIndecies.randomElement()!
-    }
-    
-    func findEmptySquares() -> [Int] {
-        var indecies: [Int]  = []
-        for (index, move) in moves.enumerated() {
-            if move == nil {
-                indecies.append(index)
-            }
-        }
-        return indecies
-    }
-    
-    func checkWinCondition() -> Bool {
-        let winPatterns: Set<Set<Int>> = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
-        
-        let playerMoveIndices = Set( moves.compactMap{ $0 }
-            .filter { $0.player ==  player }
-            .map { $0.boardIndex })
-        
-        for pattern in winPatterns where pattern.isSubset(of: playerMoveIndices) {
-            return true
-        }
-        
-        return false
-    }
-    
-    func checkForDraw() -> Bool {
-        return moves.compactMap{ $0 }.count == 9
     }
 }
