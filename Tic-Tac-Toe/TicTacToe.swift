@@ -13,6 +13,8 @@ struct TicTacToe {
         case humanWin, computerWin, draw, inProgress
     }
     
+    let winPatterns: Set<Set<Int>> = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+    
     private var moves: [Move?] = Array(repeatElement(nil, count: 9))
     private var initPlayer: Player
     private var player: Player = .human
@@ -83,7 +85,40 @@ struct TicTacToe {
         return moves[index]?.indicator ?? ""
     }
     
+    // Can win?
+    // Block?
+    // Take Middle Square?
+    // Random Square
     func determineComputerNextMove() -> Int {
+        //Can Win
+        let computerMoveIndices = Set( moves.compactMap{ $0 }
+                                        .filter { $0.player ==  .computer }
+                                        .map { $0.boardIndex })
+        for pattern in winPatterns {
+            let winIndexes = pattern.subtracting(computerMoveIndices)
+            if winIndexes.count == 1 && !isSquareOccupied(forIndex: winIndexes.first!) {
+                return winIndexes.first!
+            }
+        }
+        
+        // Block?
+        let humanMoveIndices = Set( moves.compactMap{ $0 }
+                                        .filter { $0.player ==  .human }
+                                        .map { $0.boardIndex })
+        for pattern in winPatterns {
+            let winIndexes = pattern.subtracting(humanMoveIndices)
+            if winIndexes.count == 1 && !isSquareOccupied(forIndex: winIndexes.first!) {
+                return winIndexes.first!
+            }
+        }
+        
+        // Take Middle Square?
+        let middleSquare = 4
+        if !isSquareOccupied(forIndex: middleSquare) {
+            return middleSquare
+        }
+        
+        //Random Square
         let emptySquaresIndecies = findEmptySquares()
         if(emptySquaresIndecies.isEmpty) {
             return -1
@@ -102,8 +137,6 @@ struct TicTacToe {
     }
     
     func checkWinCondition() -> Bool {
-        let winPatterns: Set<Set<Int>> = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
-        
         let playerMoveIndices = Set( moves.compactMap{ $0 }
             .filter { $0.player ==  player }
             .map { $0.boardIndex })
