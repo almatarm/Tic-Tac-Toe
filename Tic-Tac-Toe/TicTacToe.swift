@@ -41,16 +41,14 @@ struct TicTacToe {
         return moves[index] != nil
     }
     
-    mutating func humanMove(forIndex index: Int) -> Bool {
+    mutating func humanMove(forIndex index: Int) {
         let success = activeGame && setSquare(forIndex: index)
         if success { afterSuccssfullMove() }
-        return success
     }
     
-    mutating func computerMove() -> Bool {
+    mutating func computerMove() {
         let success = activeGame && setSquare(forIndex: determineComputerNextMove())
         if success { afterSuccssfullMove() }
-        return success
     }
     
     private mutating func afterSuccssfullMove() {
@@ -58,14 +56,12 @@ struct TicTacToe {
         if (winner != nil) {
             activeGame = false
             status = player == .human ? .humanWin : .computerWin
-            print("Winner is \(player)")
             return
         }
         
         if(checkForDraw()) {
             activeGame = false
             status = .draw
-            print("Draw")
             return
         }
         

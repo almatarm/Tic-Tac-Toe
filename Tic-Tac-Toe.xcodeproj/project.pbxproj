@@ -8,22 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		447A383F2869D08A00716570 /* Tic_Tac_ToeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A383E2869D08A00716570 /* Tic_Tac_ToeApp.swift */; };
-		447A38412869D08A00716570 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A38402869D08A00716570 /* ContentView.swift */; };
+		447A38412869D08A00716570 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A38402869D08A00716570 /* GameView.swift */; };
 		447A38432869D08E00716570 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 447A38422869D08E00716570 /* Assets.xcassets */; };
 		447A38462869D08E00716570 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 447A38452869D08E00716570 /* Preview Assets.xcassets */; };
 		447A384F286B1BFF00716570 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A384E286B1BFF00716570 /* Alerts.swift */; };
 		447A3852286C0A2100716570 /* TicTacToe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A3851286C0A2100716570 /* TicTacToe.swift */; };
+		447A3858286C209E00716570 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447A3857286C209E00716570 /* GameViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		447A383B2869D08A00716570 /* Tic-Tac-Toe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tic-Tac-Toe.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		447A383E2869D08A00716570 /* Tic_Tac_ToeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tic_Tac_ToeApp.swift; sourceTree = "<group>"; };
-		447A38402869D08A00716570 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		447A38402869D08A00716570 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		447A38422869D08E00716570 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		447A38452869D08E00716570 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		447A38472869D08E00716570 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		447A384E286B1BFF00716570 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
 		447A3851286C0A2100716570 /* TicTacToe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicTacToe.swift; sourceTree = "<group>"; };
+		447A3857286C209E00716570 /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +59,8 @@
 			isa = PBXGroup;
 			children = (
 				447A383E2869D08A00716570 /* Tic_Tac_ToeApp.swift */,
-				447A38402869D08A00716570 /* ContentView.swift */,
+				447A38402869D08A00716570 /* GameView.swift */,
+				447A3857286C209E00716570 /* GameViewModel.swift */,
 				447A3851286C0A2100716570 /* TicTacToe.swift */,
 				447A384E286B1BFF00716570 /* Alerts.swift */,
 				447A38422869D08E00716570 /* Assets.xcassets */,
@@ -144,9 +147,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				447A38412869D08A00716570 /* ContentView.swift in Sources */,
+				447A38412869D08A00716570 /* GameView.swift in Sources */,
 				447A384F286B1BFF00716570 /* Alerts.swift in Sources */,
 				447A3852286C0A2100716570 /* TicTacToe.swift in Sources */,
+				447A3858286C209E00716570 /* GameViewModel.swift in Sources */,
 				447A383F2869D08A00716570 /* Tic_Tac_ToeApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
